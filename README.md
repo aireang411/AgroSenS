@@ -1,2 +1,2 @@
 # AgroSenS
-Desarrollador Web Full Stack. Estudiante de Ing. de Sistemas e Informatica
+Aplicación móvil para la gestión predictiva de cultivos de hortalizas bajo invernadero
