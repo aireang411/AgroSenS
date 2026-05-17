@@ -1,0 +1,651 @@
+
+
+SOFTWARE REQUIREMENTS SPECIFICATION
+
+Project: AgroSenSE
+
+
+Ortiz Vargas Carlos Fernando
+
+
+
+Índice General
+
+
+
+⦁	Introducción
+1.1 Propósito
+1.2 Alcance
+
+
+⦁	Descripción General
+2.1 Perspectiva del Producto
+2.2 Funciones del Producto
+2.3 Características de los Usuarios
+
+
+⦁	Requerimientos Específicos
+⦁	Requisitos comunes de las interfaces
+⦁	Interfaces de usuario
+⦁	Interfaces de hardware
+⦁	Interfaces de software
+⦁	Interfaces de comunicación
+
+⦁	Requerimientos Funcionales
+⦁	Requerimiento funcional 1
+⦁	Requerimiento funcional 2
+⦁	Requerimiento funcional 3
+
+⦁	Requisitos No Funcionales
+⦁	Requisitos de rendimiento
+⦁	Seguridad
+⦁	Fiabilidad
+⦁	Disponibilidad
+⦁	Mantenibilidad
+
+3.4 Otros Requisitos
+
+
+⦁	Apéndices
+⦁	Introducción
+Este documento es una Especificación de Requisitos Software (ERS) para la aplicación móvil AgroSenS según IEEE 830-1998.
+⦁	Propósito
+El propósito de este documento es definir las especificaciones de requisitos de software (SRS) para el desarrollo de una aplicación móvil orientada a la gestión predictiva de cultivos bajo invernadero. Está dirigido al equipo de desarrollo, supervisores de proyecto y partes interesadas, asegurando que las funcionalidades de transformación de datos ambientales y edáficos cumplan con los objetivos de anticipación al estrés fisiológico vegetal.
+⦁	Alcance
+Consiste en una solución integral que abarca desde la ingesta de datos de sensores ambientales hasta la generación de alertas predictivas mediante modelos de Déficit de Presión de Vapor (DPV). El software permitirá a los agricultores visualizar el riesgo hídrico y recibir recomendaciones ejecutables antes de la aparición de daños visuales en los cultivos. No incluye el control automatizado de actuadores (riego o ventilación física), centrándose exclusivamente en el soporte a la toma de decisiones.
+
+⦁	Descripción General
+⦁	Perspectiva del Producto
+El producto es un sistema autónomo que opera como una plataforma SaaS (Software as a Service). Se compone de:
+⦁	Backend: Procesamiento de datos en la nube (AWS/Azure) y ejecución de modelos predictivos.
+⦁	Frontend Móvil: Interfaz intuitiva para el usuario final.
+⦁	Capa de Datos: Interfaz de comunicación con redes de sensores inalámbricas (WSN) mediante protocolos como MQTT o API REST.
+⦁	Funciones del Producto
+Las funciones principales del sistema se resumen en:
+⦁	Ingesta y Procesamiento: Recepción y validación de datos de temperatura y humedad.
+⦁	Cálculo Predictivo: Estimación de índices fisiológicos y proyección de tendencias de estrés.
+⦁	Gestión de Alertas: Notificación proactiva basada en umbrales dinámicos.
+⦁	Asistencia Agronómica: Generación de recomendaciones en lenguaje no técnico para el operario.
+⦁	Auditoría de Desempeño: Registro de métricas de disponibilidad y tiempos de reacción del usuario.
+⦁	Caracteristicas de los Usuarios
+Tipo de usuario	Administrador de Sistemas (Perfil Técnico)
+Formación	Ingeniería de Sistemas
+Actividades	Configurar umbrales críticos de DPV según el cultivo, gestionar el alta/baja de sensores, monitorear la latencia del backend y realizar auditorías de seguridad en la nube.
+Tipo de usuario	Agricultor / Operario de Invernadero
+Formación	Básica o Técnica en Agronomía / Conocimientos empíricos del cultivo.
+Actividades	Visualizar el estado del cultivo mediante el dashboard semafórico, interpretar las recomendaciones de riego automáticas y ejecutar acciones físicas preventivas basadas en las alertas push.
+⦁	Restricciones
+Definen las limitaciones bajo las cuales el sistema debe ser construido y operado:
+⦁	Conectividad: El sistema requiere una conexión a Internet estable (Wi-Fi o datos móviles) para el envío de telemetría desde los sensores al backend y para la recepción de alertas en el móvil.
+⦁	Hardware: El procesamiento predictivo depende de la precisión de los sensores de temperatura y humedad ambiental; errores de calibración superiores al 5% pueden invalidar las recomendaciones.
+⦁	Plataforma Móvil: La aplicación estará limitada inicialmente a OS Android 9.0 o superior para garantizar la compatibilidad con el servicio de notificaciones.
+⦁	Presupuesto/Tiempo: El desarrollo se limita a la duración del noveno semestre académico y al uso de capas gratuitas (Free Tier) de servicios en la nube.
+⦁	Suposiciones y Dependencias
+Estos son los factores que, de no cumplirse, afectarían el éxito del proyecto:
+⦁	Disponibilidad de Datos: Se asume que los sensores enviarán paquetes de datos en intervalos no mayores a 15 minutos para mantener la vigencia del modelo predictivo.
+⦁	Integridad de la API: El correcto funcionamiento depende de la disponibilidad de los servicios de terceros (como Firebase para notificaciones o AWS para el hosting del backend).
+⦁	Colaboración del Usuario: Se asume que el agricultor mantendrá la aplicación en segundo plano con permisos de notificación activos para permitir la intervención oportuna.
+⦁	3. Requerimientos Específicos
+Número de requisito	RF-UX-01
+Nombre de requisito	Visualización de Alerta Semafórica de Riesgo
+Prioridad del requisito	Alta/Esencial	
+Descripción del requisito	El dashboard (GUI) debe mostrar de forma inmediata y sin esfuerzo cognitivo el estado fisiológico global del lote mediante semáforo + texto en lenguaje del agricultor. La actualización debe ocurrir al abrir la app, tras nueva medición o tras sincronización
+
+Número de requisito	RF-BD-01
+Nombre de requisito	Registro de Tiempos de Reacción del Usuario
+Prioridad	Baja/Opcional	
+Descripción del requisito	El sistema debe capturar y almacenar el tiempo transcurrido desde que se emite una alerta predictiva hasta que el agricultor interactúa con la solución, con el fin de generar métricas sobre la efectividad de la anticipación del estrés
+
+Número de requisito	RF-INF-01
+Nombre de requisito	Monitoreo de Disponibilidad y Rendimiento del Backend
+Prioridad del requisito	Media/Deseable	
+Descripción del requisito	El sistema debe registrar métricas técnicas de operación que permitan evaluar la capacidad de la solución para mantenerse activa y responder en tiempos adecuados bajo condiciones reales de producción agrícola
+
+Número de requisito	RF-SEC-01
+Nombre de requisito	Gestión de Autenticación y Control de Acceso
+Prioridad del requisito	Alta/Esencial	
+Descripción del requisito	El sistema debe validar la identidad del usuario contra los registros de la base de datos antes de permitir el acceso a la telemetría y configuraciones del cultivo. Esto garantiza que solo el propietario del invernadero pueda visualizar y modificar sus datos
+
+Número de requisito	RF-ADM-01
+Nombre de requisito	Gestión de Nodos y Dispositivos
+Prioridad del requisito	Media/Deseable	
+Descripción del requisito	Permite registrar dispositivos físicos y asignarlos a un cultivo o zona específica dentro del invernadero, para que las mediciones se asocien correctamente al contexto fisiológico correcto
+
+Número de requisito	RF-AP-01
+Nombre de requisito	Cálculo Automático de Déficit de Presión de Vapor (VPD/DPV)
+Prioridad del requisito	Alta/Esencial	
+Descripción del requisito	El sistema debe calcular automáticamente el Déficit de Presión de Vapor (DPV) y otros índices edáficos cada vez que se reciba un paquete de datos (Temp/Hum), utilizándolos como base para determinar el estado de transpiración de la planta
+
+Número de requisito	RF-AP-02
+Nombre de requisito	Detección de Tendencias de Estrés Hídrico
+Prioridad del requisito	Alta/Esencial	
+Descripción del requisito	El backend debe comparar los datos en tiempo real contra un histórico de "ventana óptima". El sistema debe identificar si la curva de datos se dirige hacia un umbral crítico de estrés en un periodo futuro (ej. próximas 2 horas)
+
+Número de requisito	RF-AP-03
+Nombre de requisito	Generación de Recomendaciones Prescriptivas en Lenguaje Natural (No Técnicas)
+Prioridad del requisito	Media/Deseable	
+Descripción del requisito	El sistema debe traducir los resultados del análisis técnico en acciones ejecutables
+
+Número de requisito	RF-AP-04
+Nombre de requisito	Disparo de Alertas Proactivas
+Prioridad del requisito	Alta/Esencial	
+Descripción del requisito	El sistema debe emitir una notificación push al dispositivo móvil cuando el modelo predictivo determine una probabilidad de desviación fisiológica superior al 80%, antes de que los sensores registren que se ha alcanzado el límite crítico.
+
+Número de requisito	RF-AP-05
+Nombre de requisito	Ajuste Dinámico de Umbrales
+Prioridad del requisito	Baja/Opcional	
+Descripción del requisito	El sistema permitirá al usuario (o administrador) ajustar los límites de alerta según el tipo de hortaliza y la etapa fenológica del cultivo, asegurando que las predicciones sean pertinentes al ciclo de vida actual de la planta
+⦁	Requisitos comunes de las interfaces
+⦁	Interfaces de usuario
+La interfaz de usuario de AgroSenS está diseñada bajo el principio de "Cero Interpretación Técnica" para el operario de campo.
+⦁	Estilo Visual: Se utilizará un diseño Clean & Minimalist con tipografía sans-serif (ej. Roboto) para máxima legibilidad bajo condiciones de luz solar.
+⦁	Dashboard Principal: Presentará un componente circular o de barra que cambiará de color dinámicamente:
+⦁	Verde (#2ECC71): Estado óptimo.
+⦁	Amarillo (#F1C40F): Estado preventivo (Alerta de tendencia).
+⦁	Rojo (#E74C3C): Estado crítico (Acción inmediata).
+⦁	Visualización de Datos: Gráficas de líneas suaves para la tendencia del DPV de las últimas 24 horas, evitando saturación de ejes numéricos y priorizando etiquetas de tiempo (ej. "Hace 2 horas").
+⦁	Interfaces de hardware
+El software interactuará con los siguientes componentes físicos:
+⦁	Nodos Sensores: Interfaz lógica para la recepción de señales de sensores de temperatura (DHT22 o similar) y humedad relativa. La configuración se realiza mediante una tasa de muestreo programada de 15 minutos.
+⦁	Dispositivo Móvil: Requerirá acceso a la unidad de almacenamiento para caché de datos y al módulo de red para comunicación activa.
+⦁	Gateway (Opcional): En caso de usar protocolos de largo alcance, el software se interfazará con el concentrador de datos para la reconstrucción de paquetes JSON.
+⦁	Será necesario disponer de equipos de cómputo con las siguientes características:
+⦁	WiFi
+⦁	Procesador de 1.20 GHz o superior
+⦁	Memoria interna de 1 GB
+⦁	512 MB de RAM o superior
+⦁	Interfaces de software
+Para que el ecosistema funcione, el producto se integrará con:
+⦁	Servicio de Notificaciones (Firebase Cloud Messaging): * Propósito: Gestión de alertas push en tiempo real.
+⦁	Definición: Intercambio de tokens de dispositivo y payloads en formato JSON.
+⦁	Motor de Base de Datos (PostgreSQL):
+⦁	Propósito: Persistencia de históricos y logs de auditoría.
+⦁	Definición: Conexión mediante drivers estándar (JDBC/ODBC) con cifrado TLS 1.2.
+⦁	API de Clima Externa (OpenWeather o similar):
+⦁	Propósito: Enriquecer el modelo predictivo con datos de pronóstico exterior.
+⦁	Definición: Peticiones RESTful mediante método GET con respuesta en JSON.
+⦁	Interfaces de comunicación
+Se definen los siguientes protocolos para garantizar la integridad y velocidad de los datos:
+⦁	Protocolo MQTT: Utilizado para la comunicación entre los sensores y el backend debido a su bajo consumo de ancho de banda y eficiencia en entornos rurales.
+⦁	Pr.
+otocolo HTTPS: Para todas las transacciones entre la aplicación móvil y la API REST del backend, garantizando seguridad mediante certificados SSL.
+⦁	JSON (JavaScript Object Notation): Estándar único para el intercambio de información entre todas las capas del sistema.
+⦁	Requerimientos funcionales
+⦁	Requerimiento funcional 1: Cálculo de Índices Fisiológicos (RF-AP-01)
+⦁	Comprobación de validez de las entradas:
+⦁	Los datos de temperatura ($T$) deben estar en el rango de -10°C a 60°C
+⦁	La humedad relativa ($HR$) debe ser un valor entre 0% y 100%
+⦁	El formato de entrada debe ser un objeto JSON válido. Si llega un valor nulo o fuera de rango, el sistema debe descartar el paquete y registrar un log de error.
+⦁	Secuencia exacta de operaciones:
+⦁	Recepción del paquete de datos vía MQTT/API.
+⦁	Validación de rangos numéricos.
+⦁	Cálculo de la presión de vapor de saturación ($e_s$).
+⦁	Cálculo de la presión de vapor real ($e_a$).
+⦁	Cálculo de la diferencia ($DPV$)
+⦁	Persistencia del resultado en la base de datos
+⦁	Disparo del evento de verificación de umbrales (RF-AP-02).
+⦁	Respuesta a situaciones anormales:
+⦁	Falla de comunicación: Si el backend no recibe datos en 30 minutos, debe generar un log de "Sensor Offline".
+⦁	Desbordamiento: Si el cálculo arroja un valor infinito o NaN (Not a Number), se asignará un valor por defecto de 0 y se notificará al administrador.
+⦁	Detección de Tendencias de Estrés (RF-AP-02)
+⦁	Comprobación de validez: Requiere un mínimo de 4 puntos de datos (1 hora de registros) para calcular una pendiente válida.
+⦁	Secuencia exacta de operaciones:
+⦁	Consulta de los últimos n registros de DPV en la base de datos
+⦁	Aplicación de un algoritmo de regresión lineal simple o cálculo de tasa de cambio
+⦁	Comparación de la proyección contra los umbrales de la especie.
+⦁	Generación de Recomendaciones No Técnicas (RF-AP-03)
+⦁	Generación de salidas: Mensaje legible en lenguaje natural (String).
+⦁	Parámetros: Diccionario de acciones precargado (ej. "Aumentar frecuencia de riego", "Activar nebulizadores")
+⦁	Secuencia exacta de operaciones:
+⦁	Mapeo del estado de riesgo y la tendencia detectada.
+⦁	Selección de la cadena de texto correspondiente en el diccionario según el nivel de severidad.
+⦁	Inyección de la cadena en el componente de "Sugerencias" de la interfaz móvil
+⦁	Disparo de Alertas Proactivas (RF-AP-04)
+⦁	Secuencia exacta de operaciones:
+⦁	Validación del disparador ($DPV > 1.5$ kPa o Probabilidad $> 80\%$)
+⦁	Petición al servicio de Firebase Cloud Messaging (FCM)
+⦁	Envío de payload JSON con título, cuerpo y prioridad alta.
+
+⦁	Respuesta a situaciones anormales: Si el dispositivo no tiene conexión o el token ha expirado, el sistema reintentará el envío 3 veces antes de marcar la notificación como "Fallida" en los logs
+⦁	Ajuste Dinámico de Umbrales (RF-05)
+⦁	Comprobación de validez: Los nuevos valores de umbral mínimo y máximo deben cumplir la condición: $Umbral_{min} < Umbral_{max}$ y estar dentro de los límites biológicos (0 a 5 kPa).
+⦁	Secuencia exacta de operaciones:
+⦁	Autenticación del usuario (Administrador).
+⦁	Captura de nuevos valores en el formulario de configuración.
+⦁	Actualización de la tabla Configuracion_Cultivo en la BD.
+⦁	Reinicio de la lógica de comparación en el backend para aplicar los nuevos valores inmediatamente.
+⦁	Visualización de Alerta Semafórica (RF-UX-01)
+⦁	Comprobación de validez de las entradas: El sistema debe validar que el estado de riesgo recibido sea una cadena de texto permitida: {"Estable", "Pre-crítico", "Crítico"}
+⦁	Secuencia exacta de operaciones:
+⦁	Recepción del estado de riesgo desde el componente de lógica
+⦁	Evaluación mediante un selector (Switch-Case) para asignar el código hexadecimal de color
+⦁	Actualización del estado del componente visual en el Dashboard.
+⦁	Renderizado de iconos de advertencia si el estado es diferente a "Estable"
+⦁	Respuesta a situaciones anormales: Si el backend envía un estado no reconocido o nulo, la interfaz mostrará un color gris neutro y un mensaje de "Datos no disponibles"
+⦁	Generación de salidas: Cambio de color en la UI y notificación visual en pantalla.
+⦁	Relaciones entre entradas y salidas:
+⦁	Estado == "Estable" $\rightarrow$ Color: Verde (#2ECC71).
+⦁	Estado == "Pre-crítico" $\rightarrow$ Color: Amarillo (#F1C40F).
+⦁	Estado == "Crítico" $\rightarrow$ Color: Rojo (#E74C3C).
+
+⦁	Registro de Tiempos de Reacción del Usuario (RF-BD-01)
+⦁	Secuencia exacta de operaciones:
+⦁	El backend registra el timestamp_envio al disparar la alerta.
+⦁	La aplicación móvil captura el timestamp_apertura cuando el usuario pulsa la notificación.
+⦁	Se envía el par de datos al endpoint de auditoría.
+⦁	El sistema calcula la diferencia y almacena el resultado.
+⦁	Relaciones (Fórmulas):
+⦁	Latencia = timestamp_{apertura} - timestamp_{envio}
+⦁	Requisitos lógicos de BD: * tiempo_reaccion: Tipo Integer (Segundos).
+⦁	id_notificacion: Tipo UUID, Requerido.
+⦁	Monitoreo de Disponibilidad y Rendimiento (RF-INF-01)
+⦁	Parámetros: Tiempo de respuesta objetivo $< 500$ ms.
+⦁	Secuencia exacta de operaciones:
+⦁	Ejecución de un "Heartbeat" cada 5 minutos al servicio API.
+⦁	Cálculo del porcentaje de éxito de las peticiones.
+⦁	Almacenamiento de latencias medias por hora.
+⦁	Requisitos lógicos de BD:
+⦁	latencia_ms: Tipo Integer, Requerido.
+⦁	estado_servicio: Tipo Boolean (1: Online, 0: Offline).
+⦁	Gestión de Autenticación, Control de Acceso (RF-SEC-01)
+⦁	Gestión de Autenticación y Control de Acceso (RF-SEC-01)
+⦁	Comprobación de validez de las entradas:
+⦁	El correo electrónico debe tener un formato válido (ej. usuario@correo.com).
+⦁	La contraseña debe tener una longitud mínima de 8 caracteres.
+⦁	Los campos no pueden estar vacíos.
+⦁	Secuencia exacta de operaciones:
+⦁	El usuario ingresa credenciales en la interfaz móvil.
+⦁	El frontend envía una petición POST al endpoint /auth/login.
+⦁	El backend busca el registro en la tabla Usuarios filtrando por el identificador.
+⦁	El sistema compara el hash de la contraseña ingresada con el hash almacenado en la BD.
+⦁	Si coinciden, el backend genera un token JWT (JSON Web Token) firmado.
+El token se envía al móvil y se almacena en el Secure Storage para sesiones futuras.
+⦁	Respuesta a situaciones anormales:
+⦁	Credenciales Inválidas: El sistema responde con un error 401 y un mensaje "Usuario o contraseña incorrectos".
+⦁	Cuenta bloqueada: Tras 5 intentos fallidos, el sistema deshabilita el acceso por 15 minutos (log de auditoría).
+⦁	Especificación de requisitos lógicos para la BD:
+⦁	email: Tipo String/Varchar, Único, Requerido.
+⦁	password_hash: Tipo String, Requerido (Nunca texto plano).
+⦁	rol: Tipo Enum (Agricultor, Administrador).
+⦁	Gestión de Nodos y Dispositivos (RF-ADM-01)
+⦁	Comprobación de validez de las entradas:
+⦁	El ID del sensor (MAC o Serial) debe ser único en el sistema.
+⦁	El nombre del área o lote no debe exceder los 50 caracteres.
+⦁	Secuencia exacta de operaciones:
+⦁	El usuario selecciona la opción "Registrar Nuevo Sensor".
+⦁	Ingresa el identificador único del hardware y le asigna un nombre (ej. "Invernadero Tomate 1").
+⦁	El backend verifica que el dispositivo no esté asignado a otro usuario.
+⦁	Se crea la relación lógica en la base de datos entre el ID_Usuario y el ID_Sensor.
+⦁	El sistema confirma el registro y comienza a escuchar los paquetes MQTT de ese dispositivo.
+⦁	Respuesta a situaciones anormales:
+⦁	ID Duplicado: Si el sensor ya está registrado por otro agricultor, el sistema arroja un error de "Dispositivo ya vinculado".
+⦁	Falla de Hardware: Si el sensor no reporta datos en los primeros 5 minutos tras el registro, se envía una notificación de "Error de sincronización".
+⦁	Especificación de requisitos lógicos para la BD:
+⦁	id_dispositivo: Tipo UUID/String, Llave Primaria.
+⦁	nombre_lote: Tipo String, Requerido.
+⦁	estado_sensor: Tipo Boolean (Activo/Inactivo).
+⦁	usuario_propietario: Tipo FK (Foreign Key) vinculado a tabla Usuarios.
+⦁	Requisitos no funcionales
+⦁	Requisitos de rendimiento
+Para garantizar una experiencia fluida y una respuesta oportuna ante el estrés hídrico:
+⦁	Capacidad de Carga: El sistema debe soportar hasta 50 usuarios concurrentes y el procesamiento de telemetría de hasta 200 nodos sensores simultáneos sin degradación del servicio.
+⦁	Tiempo de Respuesta: El 95% de las peticiones a la API del backend deben resolverse en menos de 500 ms.
+⦁	Latencia de Procesamiento: El cálculo del DPV y la generación de la recomendación predictiva deben completarse en un tiempo máximo de 2 segundos tras la recepción del paquete JSON.
+⦁	Seguridad
+Dado el valor crítico de los datos agrícolas y la infraestructura:
+⦁	Criptografía: Todas las comunicaciones entre el sensor, el backend y el móvil deben realizarse bajo el protocolo HTTPS/TLS 1.2 o superior. Los datos sensibles en reposo (contraseñas) se cifrarán mediante algoritmos de hashing SHA-256 con salt.
+⦁	Gestión de Accesos: Se implementará autenticación mediante JWT (JSON Web Tokens) con tiempos de expiración definidos para mitigar ataques de secuestro de sesión.
+⦁	Logs de Actividad: El sistema mantendrá un registro inmutable de auditoría para cambios críticos, específicamente en el ajuste de umbrales (RF-05), registrando usuario, fecha y valor modificado.
+⦁	Integridad: Se aplicarán validaciones de esquema JSON en el backend para prevenir ataques de inyección de código y asegurar que los datos de los sensores no han sido manipulados en tránsito.
+⦁	Fiabilidad
+⦁	Tasa de Error: El sistema debe mantener una tasa de error en el procesamiento de datos inferior al 1% mensual.
+⦁	MTBF (Tiempo Medio entre Fallos): Se establece un objetivo de operación continua de al menos 720 horas (1 mes) sin incidentes críticos que inhabiliten la generación de alertas predictivas.
+⦁	Disponibilidad
+⦁	Uptime: El software (backend y servicios de alerta) debe garantizar una disponibilidad del 99.5% anual.
+⦁	Ventanas de Mantenimiento: Las tareas de mantenimiento programado que requieran desconexión deben realizarse exclusivamente en horarios de baja actividad fisiológica del cultivo (ej. entre las 00:00 y las 04:00 horas) y ser notificadas con 24 horas de antelación.
+⦁	Mantenibilidad
+⦁	Modularidad: El sistema debe seguir una arquitectura de capas o microservicios para permitir la actualización del módulo de predicción (AP) sin afectar la interfaz de usuario (UX).
+⦁	Documentación: El código fuente debe estar documentado siguiendo estándares de industria (ej. JSDoc o Docstrings de Python) para facilitar el traspaso a otros desarrolladores.
+⦁	Monitoreo: Se generarán reportes automáticos de rendimiento y estadísticas de acceso de forma semanal, permitiendo identificar cuellos de botella en la base de datos.
+⦁	Portabilidad
+⦁	El Independencia del Servidor: El backend se desarrollará utilizando tecnologías de contenedores (Docker), permitiendo que el 100% de la lógica sea trasladable entre proveedores de nube (ej. de AWS a Azure) sin cambios en el código base.
+⦁	Plataforma Móvil: El uso de lenguajes/frameworks de alto nivel (Flutter) garantizará que el código sea compatible con Android 9.0+ e iOS 13.0+ con un ajuste menor al 10% del código fuente.
+⦁	Base de Datos: Se utilizarán estándares SQL para asegurar que la migración del esquema de datos sea transparente entre diferentes motores de bases de datos relacionales.
+⦁	Otros requisitos
+⦁	Persistencia de Datos en Modo Offline
+Considerando la inestabilidad de las redes en zonas rurales, la aplicación móvil debe implementar un mecanismo de persistencia local (ej. SQLite o Room).
+⦁	Requisito: El sistema debe almacenar en el dispositivo móvil la última recomendación generada y los últimos 10 registros de DPV calculados.
+⦁	Sincronización: Al recuperar la conectividad, la aplicación debe sincronizar automáticamente los logs de interacción capturados durante el periodo offline sin pérdida de integridad de los timestamps.
+⦁	Requisitos Legales y de Propiedad de Datos
+⦁	Privacidad: El sistema debe cumplir con la normativa local de protección de datos personales (ej. Ley 1581 en Colombia o equivalente). Se debe incluir una cláusula de aceptación de términos y condiciones antes del primer uso.
+⦁	Propiedad: Se debe especificar que los datos históricos de telemetría son propiedad exclusiva del agricultor, aunque el desarrollador pueda utilizarlos de forma anónima para el re-entrenamiento del modelo predictivo.
+⦁	Requisitos de Adaptabilidad Ambiental (UX en Campo)
+Dado que el usuario operará el software en condiciones de alta luminosidad solar o con manos enguantadas/húmedas:
+⦁	Contraste: La interfaz debe soportar un "Modo de Alto Contraste" para garantizar la visibilidad bajo luz solar directa (mínimo ratio 4.5:1 según estándares WCAG).
+⦁	Interacción: Los elementos táctiles críticos (como el botón de "Confirmar Riego") deben tener un área mínima de interacción de 48x48 dp para facilitar su uso en condiciones de campo.
+⦁	Retención de Datos (Data Retention Policy)
+⦁	Almacenamiento: El sistema mantendrá la telemetría detallada (minuto a minuto) en el servidor por un periodo de 6 meses. Tras este tiempo, los datos se compactarán en promedios diarios para optimizar el almacenamiento en la base de datos sin perder la trazabilidad histórica de largo plazo.
+
+⦁	Apéndices
+⦁	Diagramas de UML - Explicación gráfica del funcionamiento del sistema.
+
+⦁	Modelo de Dominio
+ 
+
+
+⦁	Diagrama de Componentes
+ 
+
+⦁	Diagrama de Despliegue
+ 
+
+⦁	Diagrama Entidad-Relación
+
+ 
+
+
+⦁	Documentación Técnica de los Modelos
+⦁	Entidades de Dominio (Dominio del Negocio)
+⦁	Clase Usuario
+Descripción: Representa al actor humano principal del sistema. Puede operar como Agricultor (enfoque en operación diaria y respuesta a alertas) o Administrador (enfoque en configuración de sistemas y umbrales). **¿Qué enfoque de datos debe mostrar la app en pantalla al ser agricultor o administrador?**
+Responsabilidad Clave: Garantizar la trazabilidad de las acciones humanas. Cada intervención crítica o registro de datos se vincula a una identidad única.
+Atributos Críticos: email (clave única), password_hash (seguridad BCrypt), rol.
+Métodos Relevantes:
+login(): Autenticación vía JWT (RF-SEC-01).
+gestionarInvernadero(): CRUD de las instalaciones físicas.
+registrarEventoCampo(): Registro manual de intervenciones (riego, fertilización).
+
+⦁	Clase Invernadero
+Descripción: Unidad física macro de producción. Agrupa múltiples Lotes bajo un mismo techo o estructura geográfica.
+Responsabilidad Clave: Contextualizar geográficamente los datos. Permite al usuario visualizar el estado general de su instalación antes de entrar al detalle de un cultivo específico.
+Atributos Críticos: ubicacion (coordenadas o dirección), orientacion (impacto en luz solar/temperatura).
+
+⦁	Clase Lote
+Descripción: La unidad operativa mínima de análisis. Un invernadero se divide en lotes para cultivar especies distintas o manejar etapas fenológicas diferentes simultáneamente.
+Responsabilidad Clave: Ser el contenedor lógico donde convergen los sensores, las alertas y los eventos. Es el "sujeto" del monitoreo.
+Atributos Críticos: especie, etapa_fenologica, activo (booleano para filtrar lotes históricos).
+Nota Técnica: La alerta pertenece al Lote, no solo al Sensor, porque el riesgo fisiológico afecta a todo el grupo de plantas de esa zona.
+
+⦁	Clase Configuracion_Cultivo
+Descripción: Diccionario de reglas agronómicas. Define los umbrales de seguridad (mínimos/máximos) para cada variable según la especie y su etapa de vida.
+Responsabilidad Clave: Habilitar la personalización (RF-AP-05). Permite que el sistema sepa que un DPV de 1.5 kPa es crítico para una lechuga pero normal para un tomate en engorde.
+Atributos Críticos: temp_min/max, hum_min/max, dpv_critico.
+
+⦁	Clase Sensor
+Descripción: Representación digital de un nodo físico (IoT) o una fuente de datos lógica asignada a un Lote específico.
+Responsabilidad Clave: Garantizar que los datos crudos ingresen al sistema con identidad propia. Permite detectar si un dispositivo falla (Heartbeat offline).
+Atributos Críticos: id_dispositivo, tipo (Temp, Hum, PH, EC), estado_activo.
+Métodos Relevantes: calibrar(), generaLecturas().
+
+⦁	Clase Lectura_Sensor
+Descripción: Registro inmutable de un instante en el tiempo. Contiene los valores crudos capturados por un Sensor y el DPV calculado resultante de ese instante.
+Responsabilidad Clave: Prover la materia prima histórica para el análisis de tendencias (RF-AP-02). Sin estos registros timestamped, no hay predicción posible.
+Atributos Críticos: timestamp (UTC), temperatura, humedad_relativa, dpv_calculado.
+Métodos Relevantes: validarRangos() (descarta lecturas erróneas o fuera de física posible).
+
+⦁	Clase PredictionPipeline (El Motor Central)
+Descripción: Componente de lógica de negocio que implementa el flujo secuencial de análisis predictivo. No es un repositorio de datos, es un procesador de flujo.
+Responsabilidad Clave: Transformar datos crudos en conocimiento anticipatorio. Orquesta el cálculo del DPV, la detección de tendencias y la decisión de disparar alertas.
+Dualidad Arquitectónica:
+Predictiva: Calcula el estado futuro (Proyección) basándose en datos históricos.
+Proactiva: Evalúa si la probabilidad de riesgo justifica interrumpir al usuario ahora, antes del daño visible.
+Métodos Clave:
+calculateDPV(): Aplica modelo termodinámico (RF-AP-01).
+analyzeTrend(): Regresión lineal sobre ventana de tiempo (RF-AP-02).
+isCritical(): Lógica de decisión (Si tendencia + umbral > 80% probabilidad).
+
+⦁	Clase Alerta
+Descripción: Objeto de negocio que representa un evento de riesgo detectado por el sistema. Vincula el análisis técnico (Lectura_Sensor) con la acción del usuario.
+Responsabilidad Clave: Centralizar la trazabilidad del problema. Almacena el "por qué" (DPV causante) y el "qué hacer" (Recomendación asociada).
+Atributos Críticos: tipo_riesgo, mensaje, resuelta (estado del ciclo de vida).
+Métodos Relevantes: dispararNotificacion(), marcarResuelta().
+⦁	Clase Recomendacion
+Descripción: La capa de Explicabilidad (XAI). Traduce el dato técnico (DPV > 1.5 kPa) en una instrucción humana comprensible (RF-AP-03).
+Responsabilidad Clave: Reducir la carga cognitiva del agricultor. No mostrar números, mostrar recetas accionables.
+Atributos Críticos: texto_recomendacion (Lenguaje natural), nivel_severidad.
+Ejemplo: "Riesgo de estrés hídrico. Aumentar riego en 20%."
+
+⦁	Clase AlertService
+Descripción: Servicio de infraestructura encargado de la mensajería. Separa la lógica de negocio del mecanismo de transporte (FCM).
+Responsabilidad Clave: Gestionar el ciclo de vida del envío de notificaciones, incluyendo reintentos ante fallos de red (RF-AP-04).
+Métodos Relevantes: sendPushAlert(), retryFailedNotifications().
+
+⦁	Clase Notificacion_Push
+Descripción: Registro de auditoría del canal de comunicación. Rastrea el intento de contacto con el dispositivo móvil del usuario.
+Responsabilidad Clave: Garantizar la integridad de la alerta. Permite saber si el usuario no reaccionó porque no quiso o porque el mensaje nunca llegó (token inválido).
+Atributos Críticos: token_dispositivo, estado_envio (Enviada, Fallida, Leída), intentos.
+
+⦁	Clase Auditoria_Reaccion
+Descripción: Métrica de impacto. Calcula el tiempo transcurrido entre la emisión de la alerta y la interacción del usuario.
+Responsabilidad Clave: Validar la hipótesis del proyecto: "AgroSenS mejora los tiempos de respuesta" (RF-BD-01).
+Atributos Críticos: timestamp_alerta, timestamp_apertura, tiempo_reaccion_seg.
+⦁	Clase Evento_Campo
+Descripción: Acción física ejecutada por el Usuario en un Lote específico (ej. "Aplicar fertilizante").
+Responsabilidad Clave: Crear memoria operativa y correlacionar causas (acciones humanas) con efectos (estado del cultivo).
+Atributos Críticos: tipo_evento, cantidad, dpv_momento (contexto ambiental al momento de la acción).
+⦁	Clase Metrica_Infraestructura
+Descripción: Registro de salud del sistema (DevOps). Mide latencia, disponibilidad y errores de la API.
+Responsabilidad Clave: Cumplir con el monitoreo de rendimiento (RF-INF-01). Permite detectar si el sistema está lento o caído antes de que el usuario lo reporte.
+Atributos Críticos: latencia_ms, estado_servicio, porcentaje_exito.
+⦁	Clase MonitoringService
+Descripción: Servicio observador que ejecuta health-checks y persiste métricas de infraestructura.
+Responsabilidad Clave: Garantizar la fiabilidad operativa. No interactúa con lógica de cultivos, solo con la disponibilidad de la API.
+Métodos Relevantes: checkHealth(), recordLatency().
+
+⦁	Clase AuthService
+Descripción: Servicio transversal de seguridad. Gestiona autenticación y autorización mediante tokens JWT.
+Responsabilidad Clave: Proteger los datos de telemetría y garantizar que cada usuario solo vea sus propios invernaderos (RF-SEC-01).
+Métodos Relevantes: authenticate(), validateToken(), bloquearCuentaTrasIntentos().
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Una notificación push es un mensaje que el backend de AgroSenS envía directamente a la pantalla de notificaciones del celular del agricultor, sin que el usuario tenga que abrir la aplicación ni consultar activamente el sistema. 
+--Características clave:
+✅ Llega aunque la app esté cerrada o en segundo plano
+✅ Funciona con conexión a internet (WiFi o datos móviles)
+✅ Muestra título, mensaje y acciones rápidas
+✅ **Se registra en Notificacion_Push para auditoría (RF-BD-01)**
+ 
+
+ 
+
+
+ 
+--"El módulo de análisis predictivo (PredictionPipeline) calcula la probabilidad de estrés hídrico. Cuando esta supera el 80%, el AlertService dispara una notificación proactiva al dispositivo móvil, permitiendo al agricultor intervenir en la ventana crítica previa al daño fisiológico visible."--  
+--"Un sistema reactivo es como un extintor: lo usas cuando ya hay fuego. Un sistema predictivo + proactivo es como un detector de humo con alarma: te avisa ANTES de que el fuego se propague, dándote tiempo para actuar."—
+--DPV, HR kPa son conceptos fundamentales para entender cómo funciona el motor predictivo de AgroSenS.--
+ 
+Fórmula (lo que calcula tu sistema - RF-AP-01):
+ 
+Interpretación práctica para hortalizas: 
+Ejemplo de tu SRS: "Alerta predictiva: DPV actual 1.4 kPa con tendencia ascendente → En 6 horas superará 1.5 kPa (umbral crítico para lechuga)"
+--HR (Humedad Relativa) En español: Humedad Relativa del aire. Es el porcentaje de vapor de agua que contiene el aire en relación al máximo que podría contener a esa temperatura.-- Fórmula:
+ 
+Relación con el DPV:
+ 
+Ejemplo práctico:
+Escenario	Temperatura	HR	DPV resultante	Interpretación
+Mañana fresca	18°C	85%	0.3 kPa	✅ Ambiente muy húmedo (riesgo hongos)
+Mediodía soleado	28°C	55%	1.6 kPa	🔴 Estrés hídrico (necesita riego)
+Noche	20°C	75%	0.6 kPa	✅ Óptimo para recuperación
+
+--kPa (Kilopascal) es la unidad de presión que usamos para medir el DPV.--  
+--¿Por qué usamos kPa y no %? 
+⦁	La HR se mide en % (0-100%)
+⦁	El DPV se mide en kPa (0-5 kPa típicamente)
+Razón técnica: El DPV es una diferencia de presiones (cuánto vapor falta), no un porcentaje.
+Escala práctica para tu app:
+ 
+CÓMO SE RELACIONAN EN AGROSENS - Flujo de cálculo (RF-AP-01):
+ 
+📊 TABLA DE REFERENCIA RÁPIDA (Para tu SRS)
+Cultivo	Etapa	DPV Óptimo	HR Óptima	Umbral Crítico
+Lechuga	Engorde	0.8 - 1.2 kPa	70-85%	> 1.5 kPa
+Tomate cherry	Floración	1.0 - 1.4 kPa	60-75%	> 1.8 kPa
+Espinaca	Cosecha	0.6 - 1.0 kPa	75-90%	> 1.3 kPa
+
+Concepto	Significado	Unidad	Rango típico	Qué indica
+HR	Cuánta humedad hay en el aire	%	0-100%	"El aire está X% saturado"
+DPV	Cuánta humedad LE FALTA al aire	kPa	0-3 kPa	"El aire puede robar X agua a la planta"
+kPa	Unidad de presión	kPa	-	"Medida científica del estrés"
+
+ 
+Sin DPV, solo sabrías "hay 58% de humedad" pero no si eso es bueno o malo para la lechuga.
+Con DPV, sabes: "1.41 kPa = la planta está perdiendo agua demasiado rápido → RIEGA AHORA".
+Mí app es predictiva y  proactiva, pero con una distinción arquitectónica importante: no son dos modelos separados, sino un solo motor predictivo que habilita un comportamiento proactivo.
+🧠 1. COMPONENTE PREDICTIVO (El "Cerebro")
+ 
+Ejemplo técnico (PredictionPipeline):
+ 
+✅ Esto es PREDICTIVO: El sistema anticipa lo que va a pasar.
+COMPORTAMIENTO PROACTIVO (La "Acción Oportuna") Usa la predicción para actuar antes del daño.
+ 
+Ejemplo de flujo proactivo:
+ 
+✅ Esto es PROACTIVO: El sistema interviene en la ventana de oportunidad, no espera al daño.
+🔗 ARQUITECTURA: UN SOLO MOTOR, DOS CAPAS DE VALOR
+ 
+No son dos modelos independientes. Es un pipeline secuencial donde: La predicción es el análisis que responde "¿qué va a pasar? "La proactividad es la estrategia de timing que responde "¿cuándo actúo?"
+ 
+ 
+ 
+*"AgroSenS funciona como un meteorólogo con alarma temprana:
+⦁	Predictivo: Analiza presión, viento y humedad para predecir 'habrá tormenta en 3 horas'.
+⦁	Proactivo: Te envía una alerta AHORA para que guardes la cosecha ANTES de que llueva. No son dos sistemas; es un solo experto que anticipa y actúa."*
+ 
+ 
+ 
+Nota arquitectónica clave: El pipeline no envía notificaciones directamente. Solo determina si hay riesgo y delega la acción de notificación al AlertService. Esto cumple el principio de Separación de Responsabilidades y permite que el mismo motor predictivo se reutilice en otros canales futuros (SMS, email, dashboard web).
+PredictionPipeline
+Componente de lógica de negocio que implementa el flujo secuencial de análisis predictivo del sistema. Recibe paquetes de telemetría validados, calcula el Déficit de Presión de Vapor (DPV) mediante modelos físico-matemáticos, analiza tendencias históricas para proyectar estados fisiológicos futuros y evalúa la probabilidad de desviación crítica contra umbrales dinámicos por especie y etapa fenológica. Cuando la probabilidad de estrés supera el 80%, marca el resultado como crítico y delega el disparo de alertas al AlertService, garantizando la intervención proactiva antes de que el daño sea visible. Es el núcleo inteligente que cierra la brecha entre datos crudos y decisiones accionables (RF-AP-01 a RF-AP-04)
+ 
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+Datos Crudos → Lo que capturan los sensores (temperatura, humedad)
+Valor de AgroSenS → Transformar datos crudos en recomendaciones
+Registro Manual → El agricultor documenta riegos, fertilizaciones, etc.
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+💡 Analogía simple:
+⦁	Registro automático (sensores): Como un termómetro que mide la temperatura solo.
+⦁	Registro manual (app): Como cuando tú anotas en tu celular: "Hoy tomé medicina a las 8 AM".
+⦁	AgroSenS combina ambos: Sabe qué mide el ambiente Y qué hiciste tú, para darte mejores recomendaciones.
+ 
+ 
+ 
+ 
+ 
+"AgroSenS integra dos fundamentos teóricos clave: (1) la Teoría de la Carga Cognitiva de Sweller, que nos obliga a minimizar la complejidad percibida por el agricultor; y (2) los principios de IA Explicativa (XAI), que garantizan que cada recomendación algorítmica sea justificada en lenguaje natural. Juntos, estos marcos aseguran que la tecnología no solo funcione, sino que sea adoptada y útil en el campo."
+ 
+ 
+ 
+ 
+ 
+Excelente pregunta. Esta frase es fundamental para entender la arquitectura de datos de AgroSenS. Déjame explicártela con precisión técnica, ejemplos concretos y alineación total con tu SRS.
+🌡️ ¿Qué significa "Los sensores miden el ambiente"? En el contexto de AgroSenS, "el ambiente" se refiere al conjunto de variables físicas y químicas que rodean al cultivo y que influyen directamente en su estado fisiológico.
+Los sensores son los "sentidos" del sistema: capturan datos del mundo real para que el backend pueda procesarlos y convertirlos en decisiones.
+VARIABLES QUE MIDEN LOS SENSORES (Según tu SRS)
+Tu proyecto distingue dos categorías de medición:
+      1. Variables Ambientales (Aire / Microclima del invernadero)
+Variable	Sensor típico	Unidad	Rango válido (SRS)	¿Qué indica para la planta?
+Temperatura del aire	DHT22, DS18B20	°C	-10°C a 60°C	Tasa de fotosíntesis, transpiración, riesgo de estrés térmico
+Humedad Relativa (HR)	DHT22, SHT31	%	0% a 100%	Capacidad del aire para absorber agua de la planta (clave para calcular DPV)
+Temperatura de raíz	DS18B20 (sumergible)	°C	15°C a 30°C	Actividad metabólica de las raíces, absorción de nutrientes
+
+2. Variables Edáficas (Sustrato / Suelo)
+Variable	Sensor típico	Unidad	Rango válido	¿Qué indica para la planta?
+pH del sustrato	Atlas Scientific, capacitive pH	pH	4.0 a 8.0	Disponibilidad de nutrientes; pH fuera de rango bloquea absorción
+Conductividad Eléctrica (CE)	Sensor EC análogo	mS/cm	0.5 a 5.0 mS/cm	Concentración de sales/nutrientes; CE alta = riesgo de toxicidad
+
+Nota técnica: Tu SRS (RF-AP-01) exige validar que los datos estén dentro de estos rangos. Si un sensor envía temp: 85°C, el sistema debe descartar el paquete y registrar un log de error.
+  
+ 
+ 
+        3.  Los sensores permiten trazabilidad y auditoría
+Cada lectura tiene timestamp y sensor_id, lo que permite:
+⦁	Reconstruir qué condiciones ambientales hubo cuando se tomó una decisión.
+⦁	Detectar si un sensor está fallando (ej: valores estáticos por horas).
+⦁	Correlacionar eventos de campo (riego) con cambios en las variables medidas.
+
+Significado técnico:
+⦁	Un Sensor físico puede generar muchas Lectura_Sensor a lo largo del tiempo.
+⦁	Cada Lectura_Sensor es un registro inmutable con:
+⦁	timestamp: cuándo se midió
+⦁	temperatura, 2humedad_relativa, etc.: los valores crudos
+⦁	dpv_calculado: el valor derivado por el backend
+Importante: El sensor no calcula DPV. Solo mide T y HR. El cálculo lo hace el backend (PredictionPipeline.calculateDPV()).
+ 
+ 
+💡 Analogía simple:
+⦁	Sensores = Como los ojos y la piel del agricultor: perciben temperatura, humedad.
+⦁	Backend (AgroSenS) = Como el cerebro del agricultor experto: interpreta lo que perciben los sentidos y decide qué hacer.
+⦁	Sin sensores = Agricultor vendado: no puede ver el problema.
+⦁	Sin backend = Agricultor con ojos pero sin conocimiento: ve los números, pero no sabe qué significan.
+
+
+⦁	Invernadero: Unidad física de producción agrícola bajo cubierta. Contiene uno o más lotes de cultivo y pertenece a un usuario propietario. Agrupa la información geográfica y estructural de la instalación.
+
+
+
+
+
+
+
+
